@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@walletconnect/core": "^2.18.0",
+    "@walletconnect/utils": "^2.18.0",
+    "@walletconnect/web3wallet": "^1.16.1",
     "framer-motion": "^12.4.1",
     "next": "15.1.6",
     "react": "^19.0.0",

@@ -18,6 +18,7 @@ import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import { ChatOpenAI } from "@langchain/openai";
 import * as dotenv from "dotenv";
 import * as fs from "fs";
+import { customSendTransaction } from "./customAction";
 
 dotenv.config();
 
@@ -64,10 +65,11 @@ async function initializeAgent() {
     const agentkit = await AgentKit.from({
       walletProvider,
       actionProviders: [
+        customSendTransaction,
         wethActionProvider(),
         pythActionProvider(),
-        walletActionProvider(),
         erc20ActionProvider(),
+        walletActionProvider(),
         cdpApiActionProvider({
           apiKeyName: process.env.CDP_API_KEY_NAME,
           apiKeyPrivateKey: process.env.CDP_API_KEY_PRIVATE_KEY?.replace(

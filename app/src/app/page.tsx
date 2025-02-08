@@ -1,8 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { FaPlugCircleBolt } from "react-icons/fa6";
+
+import { Core } from "@walletconnect/core";
+import { buildApprovedNamespaces, getSdkError } from "@walletconnect/utils";
+import { Web3Wallet, Web3WalletTypes } from "@walletconnect/web3wallet";
 
 const RoomPage = () => {
   const y = 190;
@@ -17,6 +21,14 @@ const RoomPage = () => {
   const [sparkles, setSparkles] = useState<any>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [connectInput, setConnectInput] = useState("");
+
+  const [web3wallet, setWeb3Wallet] = useState<any>();
+  const [uri, setUri] = useState("");
+  const [proposerName, setProposerName] = useState("");
+  const [proposerUrl, setProposerUrl] = useState("");
+  const [proposerIcon, setProposerIcon] = useState("");
+  const [topic, setTopic] = useState("");
+  const sessionEstablished = useRef(false);
 
   useEffect(() => {
     const moveCharacter = () => {
@@ -108,10 +120,85 @@ const RoomPage = () => {
     }
   };
 
-  const handleConnect = () => {
-    console.log("Connecting with:", connectInput);
-    setIsModalOpen(false);
+  const handleConnect = async () => {
+    const core = new Core({
+      projectId:
+        process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID ||
+        "3a8170812b534d0ff9d794f19a901d64",
+    });
+    const web3wallet = await Web3Wallet.init({
+      core,
+      metadata: {
+        name: "PalWallet",
+        description: "This is PalWallet",
+        url: "2025-agents-palwallet.vercel.app",
+        icons: ["https://2025-agents-palwallet.vercel.app/icon.png"],
+      },
+    });
+    setWeb3Wallet(web3wallet);
+    web3wallet.on(
+      "session_proposal",
+      async ({ id, params }: Web3WalletTypes.SessionProposal) => {
+        try {
+          const approvedNamespaces = buildApprovedNamespaces({
+            proposal: params,
+            supportedNamespaces: {
+              eip155: {
+                chains: [`eip155:84532`],
+                methods: ["eth_sendTransaction", "personal_sign"],
+                events: ["accountsChanged", "chainChanged"],
+                accounts: [`eip155:84532:${process.env.NEXT_PUBLIC_ADDRESS}`],
+              },
+            },
+          });
+          const { topic } = await web3wallet.approveSession({
+            id,
+            namespaces: approvedNamespaces,
+          });
+          console.log("walletConnect: session approved", topic);
+          setProposerName(params.proposer.metadata.name);
+          setProposerUrl(params.proposer.metadata.url);
+          setProposerIcon(params.proposer.metadata.icons[0]);
+          setTopic(topic);
+          sessionEstablished.current = true;
+          setConnectInput("");
+          setIsModalOpen(false);
+        } catch (error) {
+          console.log("walletConnect: error", error);
+          await web3wallet.rejectSession({
+            id: id,
+            reason: getSdkError("USER_REJECTED"),
+          });
+        }
+      }
+    );
+
+    web3wallet.on(
+      "session_request",
+      async (event: Web3WalletTypes.SessionRequest) => {
+        const { topic, params, id } = event;
+        if (params.request.method != "eth_sendTransaction") {
+          throw new Error("Unsupported method");
+        }
+        const [{ to, value, data }] = params.request.params;
+        console.log("to", to);
+        console.log("value", value);
+        console.log("data", data);
+      }
+    );
+    web3wallet.pair({ uri: connectInput });
   };
+
+  useEffect(() => {
+    if (web3wallet && topic) {
+      return () => {
+        web3wallet.disconnectSession({
+          topic,
+          reason: getSdkError("USER_DISCONNECTED"),
+        });
+      };
+    }
+  }, [web3wallet, topic]);
 
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-black to-gray-800 flex flex-col items-center justify-center text-white overflow-hidden">
