@@ -273,13 +273,13 @@ async function chooseMode(): Promise<"chat" | "auto"> {
 async function main() {
   try {
     const { agent, config } = await initializeAgent();
-    const mode = await chooseMode();
+    // const mode = await chooseMode();
 
-    if (mode === "chat") {
+    // if (mode === "chat") {
       await runChatMode(agent, config);
-    } else {
-      await runAutonomousMode(agent, config);
-    }
+    // } else {
+    //   await runAutonomousMode(agent, config);
+    // }
   } catch (error) {
     if (error instanceof Error) {
       console.error("Error:", error.message);
