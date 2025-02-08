@@ -131,3 +131,5 @@ dist
 
 wallet_data.txt
 .turbo
+
+.DS_Store
