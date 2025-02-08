@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 const RoomPage = () => {
-  const y = 190; // Set bottom position
+  const y = 190;
   const xFactor = 200;
 
   const [position, setPosition] = useState({ x: Math.random() * xFactor, y });
@@ -12,23 +12,41 @@ const RoomPage = () => {
   const [message, setMessage] = useState("");
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [sparkles, setSparkles] = useState<any>([]);
 
   useEffect(() => {
     const moveCharacter = () => {
       if (!isSpeaking) {
         setPosition({
           x: Math.random() * xFactor,
-          y, // Keep y fixed at bottom
+          y,
         });
       }
       setVisible(true);
     };
 
     moveCharacter();
-
     const interval = setInterval(moveCharacter, 2000);
     return () => clearInterval(interval);
   }, [isSpeaking]);
+
+  useEffect(() => {
+    const createSparkles = () => {
+      const newSparkles = Array.from({ length: 20 }, () => ({
+        id: Math.random(),
+        x: Math.random() * 100 + "%",
+        y: Math.random() * 100 + "%",
+        size: Math.random() * 7 + 4,
+        opacity: Math.random() * 0.9 + 0.3,
+        duration: Math.random() * 4 + 2,
+        color: Math.random() > 0.5 ? "bg-green-400" : "bg-purple-400",
+      }));
+      setSparkles(newSparkles);
+    };
+    createSparkles();
+    const sparkleInterval = setInterval(createSparkles, 3000);
+    return () => clearInterval(sparkleInterval);
+  }, []);
 
   const handleSubmit = (e?: React.FormEvent<HTMLFormElement>) => {
     if (e) e.preventDefault();
@@ -37,30 +55,31 @@ const RoomPage = () => {
       setTimeout(() => {
         setIsLoading(false);
         setIsSpeaking(true);
-        setPosition({ x: 240, y }); // Move character to x 240 when speaking
-        setTimeout(() => setIsSpeaking(false), 3000); // Bubble disappears after 3 seconds
-        setMessage(""); // Clear message after submitting
-      }, 1000); // Simulate loading delay
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter") {
-      if (e.ctrlKey || e.metaKey) {
-        // Ctrl + Enter → Insert newline
-        e.preventDefault();
-        setMessage((prev) => prev + "\n");
-      } else {
-        // Enter → Submit
-        e.preventDefault();
-        handleSubmit();
-      }
+        setPosition({ x: 240, y });
+        setTimeout(() => setIsSpeaking(false), 3000);
+        setMessage("");
+      }, 1000);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black to-gray-800 flex flex-col items-center justify-center text-white">
-      <header className="text-4xl font-bold mb-6 text-green-300 mt-4">
+    <div className="relative min-h-screen bg-gradient-to-br from-black to-gray-800 flex flex-col items-center justify-center text-white overflow-hidden">
+      {sparkles.map((sparkle: any) => (
+        <motion.div
+          key={sparkle.id}
+          className={`absolute rounded-full shadow-lg ${sparkle.color}`}
+          style={{
+            width: sparkle.size,
+            height: sparkle.size,
+            left: sparkle.x,
+            top: sparkle.y,
+            opacity: sparkle.opacity,
+          }}
+          animate={{ opacity: [0, sparkle.opacity, 0] }}
+          transition={{ duration: sparkle.duration, repeat: Infinity }}
+        />
+      ))}
+      <header className="text-4xl font-bold mb-6 text-green-300">
         PalWallet
       </header>
       <div
@@ -92,13 +111,12 @@ const RoomPage = () => {
       </div>
       <form
         onSubmit={handleSubmit}
-        className="mt-4 flex flex-col items-center w-full max-w-md p-4"
+        className="mt-4 flex flex-col items-center w-full max-w-md z-10 p-4"
       >
         <textarea
           className="w-full h-32 p-2 border rounded-md bg-black text-green-400 border-green-500 shadow-[0px_0px_8px_rgba(0,255,0,0.5)] tracking-widest text-lg leading-tight caret-green-300 outline-none focus:ring-0 focus:border-green-400"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={handleKeyDown} // Handle key events
           placeholder="Type a message..."
           style={{
             backgroundImage:
