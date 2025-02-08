@@ -131,7 +131,7 @@ const RoomPage = () => {
         />
       ))}
       <motion.header
-        className="text-5xl font-bold mb-6"
+        className="text-5xl font-bold mt-2 mb-6"
         animate={{ color: ["#22c55e", "#a855f7", "#22c55e"] }}
         transition={{ duration: 5, repeat: Infinity, repeatType: "reverse" }}
       >
@@ -173,7 +173,7 @@ const RoomPage = () => {
       </div>
       <form
         onSubmit={handleSubmit}
-        className="mt-4 flex flex-col items-center w-full max-w-md z-10 p-4"
+        className="mt-2 flex flex-col items-center w-full max-w-md z-10 p-4"
       >
         <textarea
           className="w-full h-32 p-2 border rounded-md bg-black text-green-400 border-green-500 shadow-[0px_0px_8px_rgba(0,255,0,0.5)] text-lg leading-tight caret-green-300 outline-none focus:ring-0 focus:border-green-400 disabled:opacity-50 disabled:cursor-not-allowed"
