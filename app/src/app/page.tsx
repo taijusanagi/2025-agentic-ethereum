@@ -5,19 +5,22 @@ import { motion } from "framer-motion";
 
 const RoomPage = () => {
   const y = 220; // Set bottom position
-  const xFactor = 240;
+  const xFactor = 250;
 
   const [position, setPosition] = useState({ x: Math.random() * xFactor, y });
   const [visible, setVisible] = useState(false);
   const [message, setMessage] = useState("");
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const moveCharacter = () => {
-      setPosition((prev) => ({
-        x: Math.random() * xFactor,
-        y, // Keep y fixed at bottom
-      }));
+      if (!isSpeaking) {
+        setPosition({
+          x: Math.random() * xFactor,
+          y, // Keep y fixed at bottom
+        });
+      }
       setVisible(true);
     };
 
@@ -25,22 +28,32 @@ const RoomPage = () => {
 
     const interval = setInterval(moveCharacter, 2000);
     return () => clearInterval(interval);
-  }, []);
+  }, [isSpeaking]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (message.trim()) {
-      setIsSpeaking(true);
-      setTimeout(() => setIsSpeaking(false), 3000); // Bubble disappears after 3 seconds
+      setIsLoading(true);
+      setTimeout(() => {
+        setIsLoading(false);
+        setIsSpeaking(true);
+        setPosition({ x: 240, y }); // Move character to x 240 when speaking
+        setTimeout(() => setIsSpeaking(false), 3000); // Bubble disappears after 3 seconds
+      }, 1000); // Simulate loading delay
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
+    <div className="flex flex-col items-center justify-center h-screen relative">
       <div
         className="relative w-[400px] h-[400px] bg-cover bg-center"
         style={{ backgroundImage: "url('/room.png')" }}
       >
+        {isLoading && (
+          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
+            <div className="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        )}
         {isSpeaking && (
           <img
             src="/bubble.png"
@@ -71,9 +84,10 @@ const RoomPage = () => {
         />
         <button
           type="submit"
-          className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+          className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+          disabled={!message || isLoading}
         >
-          Submit
+          {isLoading ? "Loading..." : "Submit"}
         </button>
       </form>
     </div>
