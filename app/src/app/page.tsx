@@ -62,6 +62,20 @@ const RoomPage = () => {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter") {
+      if (e.ctrlKey || e.metaKey) {
+        // Ctrl + Enter → Insert newline
+        e.preventDefault();
+        setMessage((prev) => prev + "\n");
+      } else {
+        // Enter → Submit
+        e.preventDefault();
+        handleSubmit();
+      }
+    }
+  };
+
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-black to-gray-800 flex flex-col items-center justify-center text-white overflow-hidden">
       {sparkles.map((sparkle: any) => (
@@ -79,9 +93,13 @@ const RoomPage = () => {
           transition={{ duration: sparkle.duration, repeat: Infinity }}
         />
       ))}
-      <header className="text-4xl font-bold mb-6 text-green-300">
+      <motion.header
+        className="text-5xl font-bold mb-6"
+        animate={{ color: ["#22c55e", "#a855f7", "#22c55e"] }} // Green -> Purple -> Green
+        transition={{ duration: 5, repeat: Infinity, repeatType: "reverse" }}
+      >
         PalWallet
-      </header>
+      </motion.header>
       <div
         className="relative w-[360px] h-[360px] bg-cover bg-center"
         style={{ backgroundImage: "url('/room.png')" }}
@@ -117,6 +135,7 @@ const RoomPage = () => {
           className="w-full h-32 p-2 border rounded-md bg-black text-green-400 border-green-500 shadow-[0px_0px_8px_rgba(0,255,0,0.5)] tracking-widest text-lg leading-tight caret-green-300 outline-none focus:ring-0 focus:border-green-400"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={handleKeyDown} // Handle key events
           placeholder="Type a message..."
           style={{
             backgroundImage:
