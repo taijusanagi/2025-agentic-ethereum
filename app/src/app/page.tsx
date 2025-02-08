@@ -49,19 +49,42 @@ const RoomPage = () => {
     return () => clearInterval(sparkleInterval);
   }, []);
 
-  const handleSubmit = (e?: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
     if (e) e.preventDefault();
-    if (message.trim()) {
-      setIsLoading(true);
-      setMessage("");
-      setTimeout(() => {
-        setIsLoading(false);
-        setIsSpeaking(true);
-        setResponseMessage(
-          "This is a sample response message that appears inside the message bubble. You can replace this with an actual AI response.This is a sample response message that appears inside the message bubble. You can replace this with an actual AI response.This is a sample response message that appears inside the message bubble. You can replace this with an actual AI response.This is a sample response message that appears inside the message bubble. You can replace this with an actual AI response."
-        );
-        setPosition({ x: 240, y });
-      }, 1000);
+    if (!message.trim()) return;
+
+    setIsLoading(true);
+    setMessage("");
+
+    try {
+      const response = await fetch(
+        process.env.NEXT_PUBLIC_CHAT_API || "http://localhost:8080/chat",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: process.env.NEXT_PUBLIC_BASIC_AUTH
+              ? "Basic " + btoa(process.env.NEXT_PUBLIC_BASIC_AUTH)
+              : "",
+          },
+          body: JSON.stringify({ message }),
+        }
+      );
+
+      const data = await response.json();
+
+      // Concat all response strings into a single message
+      const concatenatedMessage =
+        data.response?.join(" ") || "No response received.";
+
+      setResponseMessage(concatenatedMessage);
+    } catch (error) {
+      console.error("Error:", error);
+      setResponseMessage("Error: Unable to send the message.");
+    } finally {
+      setIsLoading(false);
+      setIsSpeaking(true);
+      setPosition({ x: 240, y });
     }
   };
 

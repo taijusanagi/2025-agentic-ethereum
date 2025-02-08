@@ -22,7 +22,7 @@ import * as fs from "fs";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -145,7 +145,7 @@ app.post("/chat", async (req: any, res: any) => {
     }
     console.log(`[INFO] Response generated: "${responseText}"`);
 
-    res.json({ response: responseText.trim() });
+    res.json({ response: [responseText.trim()] });
   } catch (error) {
     console.error("Chat error:", error);
     res.status(500).json({ error: "Internal Server Error" });
