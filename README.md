@@ -1,3 +1,3 @@
 # PalWallet
 
-![key](./docs/key.png)
+![top](./docs/top.png)
