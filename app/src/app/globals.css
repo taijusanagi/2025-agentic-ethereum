@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  font-family: var(--font-pixel), sans-serif;
+  font-size: 20px; /* Adjust size to make it readable */
+  letter-spacing: 1px; /* Optional: Can enhance pixel effect */
+  image-rendering: pixelated; /* Makes images look more pixel-art-like */
+}

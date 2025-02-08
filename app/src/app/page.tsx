@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 const RoomPage = () => {
-  const y = 220; // Set bottom position
-  const xFactor = 250;
+  const y = 190; // Set bottom position
+  const xFactor = 200;
 
   const [position, setPosition] = useState({ x: Math.random() * xFactor, y });
   const [visible, setVisible] = useState(false);
@@ -59,9 +59,12 @@ const RoomPage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen relative">
+    <div className="min-h-screen bg-gradient-to-br from-black to-gray-800 flex flex-col items-center justify-center text-white">
+      <header className="text-4xl font-bold mb-6 text-green-300 mt-4">
+        PalWallet
+      </header>
       <div
-        className="relative w-[400px] h-[400px] bg-cover bg-center"
+        className="relative w-[360px] h-[360px] bg-cover bg-center"
         style={{ backgroundImage: "url('/room.png')" }}
       >
         {isLoading && (
@@ -89,14 +92,10 @@ const RoomPage = () => {
       </div>
       <form
         onSubmit={handleSubmit}
-        className="mt-4 flex flex-col items-center w-full max-w-md"
+        className="mt-4 flex flex-col items-center w-full max-w-md p-4"
       >
         <textarea
-          className="w-full h-32 p-2 border rounded-md 
-             bg-black text-green-400 font-mono 
-             border-green-500 shadow-[0px_0px_8px_rgba(0,255,0,0.5)]
-             tracking-widest text-lg leading-tight
-             caret-green-300 outline-none focus:ring-0 focus:border-green-400"
+          className="w-full h-32 p-2 border rounded-md bg-black text-green-400 border-green-500 shadow-[0px_0px_8px_rgba(0,255,0,0.5)] tracking-widest text-lg leading-tight caret-green-300 outline-none focus:ring-0 focus:border-green-400"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown} // Handle key events
