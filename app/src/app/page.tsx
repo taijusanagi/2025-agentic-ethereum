@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { FaPlugCircleBolt } from "react-icons/fa6";
 
 const RoomPage = () => {
   const y = 190;
@@ -14,6 +15,8 @@ const RoomPage = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [sparkles, setSparkles] = useState<any>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [connectInput, setConnectInput] = useState("");
 
   useEffect(() => {
     const moveCharacter = () => {
@@ -105,6 +108,11 @@ const RoomPage = () => {
     }
   };
 
+  const handleConnect = () => {
+    console.log("Connecting with:", connectInput);
+    setIsModalOpen(false);
+  };
+
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-black to-gray-800 flex flex-col items-center justify-center text-white overflow-hidden">
       {sparkles.map((sparkle: any) => (
@@ -158,6 +166,10 @@ const RoomPage = () => {
             transition={{ duration: 1, ease: "easeInOut" }}
           />
         )}
+        <FaPlugCircleBolt
+          className="absolute bottom-2 left-2 text-gray-600 text-3xl cursor-pointer hover:text-green-500"
+          onClick={() => setIsModalOpen(true)}
+        />
       </div>
       <form
         onSubmit={handleSubmit}
@@ -209,6 +221,35 @@ const RoomPage = () => {
           </button>
         )}
       </form>
+      {/* Connection Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+          <div className="bg-gray-800 p-6 rounded-lg shadow-lg text-center w-full max-w-lg m-2">
+            <h2 className="text-xl font-bold mb-4">dApps Fusion</h2>
+            <input
+              type="text"
+              className="w-full p-2 border rounded-md bg-black text-green-400 border-green-500 outline-none focus:ring-0 focus:border-green-400"
+              placeholder="Enter wallet connect url..."
+              value={connectInput}
+              onChange={(e) => setConnectInput(e.target.value)}
+            />
+            <div className="flex justify-center gap-4 mt-4">
+              <button
+                className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+                onClick={() => setIsModalOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+                onClick={handleConnect}
+              >
+                Connect
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
