@@ -164,7 +164,7 @@ const RoomPage = () => {
         className="mt-4 flex flex-col items-center w-full max-w-md z-10 p-4"
       >
         <textarea
-          className="w-full h-32 p-2 border rounded-md bg-black text-green-400 border-green-500 shadow-[0px_0px_8px_rgba(0,255,0,0.5)] text-lg leading-tight caret-green-300 outline-none focus:ring-0 focus:border-green-400"
+          className="w-full h-32 p-2 border rounded-md bg-black text-green-400 border-green-500 shadow-[0px_0px_8px_rgba(0,255,0,0.5)] text-lg leading-tight caret-green-300 outline-none focus:ring-0 focus:border-green-400 disabled:opacity-50 disabled:cursor-not-allowed"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
@@ -180,8 +180,17 @@ const RoomPage = () => {
             backgroundImage:
               "radial-gradient(rgba(0, 255, 0, 0.2) 8%, transparent 10%)",
             backgroundSize: "8px 8px",
+            ...(isLoading || isSpeaking
+              ? {
+                  backgroundColor: "rgba(0, 0, 0, 0.6)",
+                  color: "rgba(0, 255, 0, 0.3)",
+                  borderColor: "rgba(0, 255, 0, 0.3)",
+                  boxShadow: "0px 0px 4px rgba(0,255,0,0.2)",
+                }
+              : {}),
           }}
         />
+
         {isSpeaking ? (
           <button
             type="button"
