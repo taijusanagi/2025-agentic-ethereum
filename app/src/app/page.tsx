@@ -30,8 +30,8 @@ const RoomPage = () => {
     return () => clearInterval(interval);
   }, [isSpeaking]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = (e?: React.FormEvent<HTMLFormElement>) => {
+    if (e) e.preventDefault();
     if (message.trim()) {
       setIsLoading(true);
       setTimeout(() => {
@@ -39,7 +39,22 @@ const RoomPage = () => {
         setIsSpeaking(true);
         setPosition({ x: 240, y }); // Move character to x 240 when speaking
         setTimeout(() => setIsSpeaking(false), 3000); // Bubble disappears after 3 seconds
+        setMessage(""); // Clear message after submitting
       }, 1000); // Simulate loading delay
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter") {
+      if (e.ctrlKey || e.metaKey) {
+        // Ctrl + Enter → Insert newline
+        e.preventDefault();
+        setMessage((prev) => prev + "\n");
+      } else {
+        // Enter → Submit
+        e.preventDefault();
+        handleSubmit();
+      }
     }
   };
 
@@ -77,14 +92,24 @@ const RoomPage = () => {
         className="mt-4 flex flex-col items-center w-full max-w-md"
       >
         <textarea
-          className="w-full h-20 p-2 border rounded-md"
+          className="w-full h-32 p-2 border rounded-md 
+             bg-black text-green-400 font-mono 
+             border-green-500 shadow-[0px_0px_8px_rgba(0,255,0,0.5)]
+             tracking-widest text-lg leading-tight
+             caret-green-300 outline-none focus:ring-0 focus:border-green-400"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={handleKeyDown} // Handle key events
           placeholder="Type a message..."
+          style={{
+            backgroundImage:
+              "radial-gradient(rgba(0, 255, 0, 0.2) 8%, transparent 10%)",
+            backgroundSize: "8px 8px",
+          }}
         />
         <button
           type="submit"
-          className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+          className="mt-2 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
           disabled={!message || isLoading}
         >
           {isLoading ? "Loading..." : "Submit"}
