@@ -11,11 +11,11 @@ PalWallet is an AI-powered crypto agent that combines intelligent automation wit
 - **AI-Powered Custom Operations** – Execute transactions and manage assets through an AI agent with customizable actions.
 - **Flexible Interaction** – Perform tasks via chat-based commands or interact with dApps using WalletConnect.
 
-![flow](./docs/flow.png)
+![flow](./app/public/flow.png)
 
 ## Technical Detail
 
-![architecture](./docs/architecture.png)
+![architecture](./app/public/architecture.png)
 
 - **Coinbase AgentKit**: AI agent framework used to handle blockchain operations.
   - Added a custom handler for transaction simulation mock and direct transaction execution via WalletConnect. This demonstrates a new architecture solution for AI-powered crypto agents.
