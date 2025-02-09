@@ -34,6 +34,8 @@ PalWallet is an AI-powered crypto agent that combines intelligent automation wit
 
 https://autonome.alt.technology/test-naigyf (Password is needed to access, please contact me for that)
 
+![deployed](./docs/deployed.png)
+
 ### Local Development
 
 For dApps Fusion, it is required to run chatbot locally, please run the following after set the [env](https://github.com/taijusanagi/2025-agents-palwallet/blob/main/chatbot/.env.sample)
