@@ -30,11 +30,21 @@ PalWallet is an AI-powered crypto agent that combines intelligent automation wit
 
 [https://2025-agents-palwallet.vercel.app/](https://2025-agents-palwallet.vercel.app/)
 
+### Demo Video
+
+TBD
+
 ### Deployed AI Agent
 
 https://autonome.alt.technology/test-naigyf (Password is needed to access, please contact me for that)
 
 ![deployed](./docs/deployed.png)
+
+### Tx made in Demo
+
+https://sepolia.basescan.org/tx/0x857b41f1a72bbea7db005c90228044fbe6859f9b54409edc875f1eccaabea147
+
+(This is called with AI Agent via Wallet Connect)
 
 ### Local Development
 
