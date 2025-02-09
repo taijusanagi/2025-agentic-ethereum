@@ -18,7 +18,10 @@ import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import { ChatOpenAI } from "@langchain/openai";
 import * as dotenv from "dotenv";
 import * as fs from "fs";
-import { customSendTransaction } from "./customAction";
+import {
+  myActionPalWalletCustomFunction,
+  myActionPalWalletSimlate,
+} from "./customAction";
 
 dotenv.config();
 
@@ -65,7 +68,8 @@ async function initializeAgent() {
     const agentkit = await AgentKit.from({
       walletProvider,
       actionProviders: [
-        customSendTransaction,
+        myActionPalWalletSimlate,
+        myActionPalWalletCustomFunction,
         wethActionProvider(),
         pythActionProvider(),
         erc20ActionProvider(),
