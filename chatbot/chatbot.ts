@@ -68,8 +68,10 @@ async function initializeAgent() {
     const agentkit = await AgentKit.from({
       walletProvider,
       actionProviders: [
+        // This is custom action for this hackathon
         myActionPalWalletSimlate,
         myActionPalWalletRunDirect,
+        // custom action end
         wethActionProvider(),
         pythActionProvider(),
         erc20ActionProvider(),

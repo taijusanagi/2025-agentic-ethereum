@@ -21,6 +21,7 @@ PalWallet is an AI-powered crypto agent that combines intelligent automation wit
   - Added a custom handler for transaction simulation mock and direct transaction execution via WalletConnect. This demonstrates a new architecture solution for AI-powered crypto agents.
 - **Autonome**: Decentralized hosting platform for AI agents.
   - Successfully integrated the Autonome backend with a custom frontend, providing an intuitive user interface for seamless chatbot interaction.
+  - Connecting custom frontend and Autonome was bit tricky, but though communication via Discord, I was able to figure out to get url and way to bypass the authorization.
 - **Base Network**: The primary blockchain network used for transactions.
 - **Hybrid Interaction Methods (dApps Fusion)**: Simple operations can be streamlined through **chat-based AI interactions**, but most users require **complex operations** to gain real benefits—such as integrating with new protocols or handling advanced scenarios. **This hybrid interaction system** enables both approaches, **bridging user needs with the capabilities of the crypto AI agent**.
 
@@ -32,7 +33,7 @@ PalWallet is an AI-powered crypto agent that combines intelligent automation wit
 
 ### Demo Video
 
-TBD
+https://youtu.be/cTdHH69y_kk
 
 ### Deployed AI Agent
 
