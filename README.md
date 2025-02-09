@@ -23,3 +23,23 @@ PalWallet is an AI-powered crypto agent that combines intelligent automation wit
   - Successfully integrated the Autonome backend with a custom frontend, providing an intuitive user interface for seamless chatbot interaction.
 - **Base Network**: The primary blockchain network used for transactions.
 - **Hybrid Interaction Methods (dApps Fusion)**: Simple operations can be streamlined through **chat-based AI interactions**, but most users require **complex operations** to gain real benefits—such as integrating with new protocols or handling advanced scenarios. **This hybrid interaction system** enables both approaches, **bridging user needs with the capabilities of the crypto AI agent**.
+
+## References
+
+### Live App
+
+TBD
+
+### Deployed AI Agent
+
+https://autonome.alt.technology/test-naigyf (Password is needed to access, please contact me for that)
+
+### Local Development
+
+For dApps Fusion, it is required to run chatbot locally, please run the following after set the env
+
+```
+cd chatbot
+npm run build
+npm run start
+```
