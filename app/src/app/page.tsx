@@ -297,8 +297,6 @@ const RoomPage = () => {
     }
   };
 
-  const [mode, setMode] = useState("1");
-
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-black to-gray-800 flex flex-col items-center justify-center text-white overflow-hidden">
       {sparkles.map((sparkle: any) => (
@@ -316,183 +314,160 @@ const RoomPage = () => {
           transition={{ duration: sparkle.duration, repeat: Infinity }}
         />
       ))}
-      {mode == "1" && (
-        <>
-          <motion.header
-            className="text-5xl font-bold mt-2 mb-6"
-            animate={{ color: ["#22c55e", "#a855f7", "#22c55e"] }}
-            transition={{
-              duration: 5,
-              repeat: Infinity,
-              repeatType: "reverse",
-            }}
-          >
-            PalWallet
-          </motion.header>
-          <img src="./icon.png" />
-        </>
-      )}
-      {mode == "2" && (
-        <>
-          <motion.header
-            className="text-5xl font-bold mt-2 mb-6"
-            animate={{ color: ["#22c55e", "#a855f7", "#22c55e"] }}
-            transition={{
-              duration: 5,
-              repeat: Infinity,
-              repeatType: "reverse",
-            }}
-          >
-            PalWallet
-          </motion.header>
-          <div
-            className="relative w-[360px] h-[360px] bg-cover bg-center"
-            style={{ backgroundImage: "url('/room.png')" }}
-          >
-            {isLoading && (
-              <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
-                <div className="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
-              </div>
-            )}
-            {isSpeaking && (
-              <div className="absolute">
-                <div className="relative w-[340px] ml-2 mt-2">
-                  <img
-                    src="/bubble.png"
-                    alt="Speaking Bubble"
-                    className="w-full"
-                  />
-                  <div className="absolute inset-0 flex flex-col items-start justify-start ml-4 mr-2 my-2 text-black text-sm h-28 overflow-y-scroll">
-                    {responseMessage}
-                  </div>
-                </div>
-              </div>
-            )}
-            {visible && (
-              <motion.img
-                src="/character.png"
-                alt="Character"
-                className="absolute w-40 h-40"
-                initial={{ opacity: 0, y }}
-                animate={{ x: position.x, y: position.y, opacity: 1 }}
-                transition={{ duration: 1, ease: "easeInOut" }}
-              />
-            )}
-            <FaPlugCircleBolt
-              className="absolute bottom-2 left-2 text-gray-600 text-3xl cursor-pointer hover:text-green-500"
-              onClick={() => setIsModalOpen(true)}
-            />
-          </div>
-          <form
-            onSubmit={handleSubmit}
-            className="mt-2 flex flex-col items-center w-full max-w-md z-10 p-4"
-          >
-            <textarea
-              className="w-full h-32 p-2 border rounded-md bg-black text-green-400 border-green-500 shadow-[0px_0px_8px_rgba(0,255,0,0.5)] text-lg leading-tight caret-green-300 outline-none focus:ring-0 focus:border-green-400 disabled:opacity-50 disabled:cursor-not-allowed"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder={
-                isLoading
-                  ? "Loading..."
-                  : isSpeaking
-                  ? "Please check the response..."
-                  : "Type a message..."
-              }
-              disabled={isLoading || isSpeaking}
-              style={{
-                backgroundImage:
-                  "radial-gradient(rgba(0, 255, 0, 0.2) 8%, transparent 10%)",
-                backgroundSize: "8px 8px",
-                ...(isLoading || isSpeaking
-                  ? {
-                      backgroundColor: "rgba(0, 0, 0, 0.6)",
-                      color: "rgba(0, 255, 0, 0.3)",
-                      borderColor: "rgba(0, 255, 0, 0.3)",
-                      boxShadow: "0px 0px 4px rgba(0,255,0,0.2)",
-                    }
-                  : {}),
-              }}
-            />
 
-            {isConfirming ? (
-              <div className="flex space-x-4">
-                <button
-                  className="mt-4 px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
-                  onClick={async () => {
-                    setIsSpeaking(false);
-                    setResponseMessage("");
-                    setIsConfirming(false);
-                  }}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  onClick={handleTx}
-                  className="mt-4 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
-                >
-                  Confirm
-                </button>
-              </div>
-            ) : isSpeaking ? (
-              <button
-                type="button"
-                onClick={handleAcknowledge}
-                className="mt-4 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
-              >
-                I got it
-              </button>
-            ) : (
-              <button
-                type="submit"
-                className="mt-4 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
-                disabled={!message || isLoading}
-              >
-                {isLoading ? "Loading..." : "Submit"}
-              </button>
-            )}
-          </form>
-          {/* Connection Modal */}
-          {isModalOpen && (
-            <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-              <div className="bg-gray-800 p-6 rounded-lg shadow-lg text-center w-full max-w-lg m-2">
-                <h2 className="text-xl font-bold mb-2">dApps Fusion</h2>
-                <p className="mb-4 text-xs text-green-400">
-                  Tested example dApp:{" "}
-                  <a
-                    className="underline cursor-pointer"
-                    href="https://superbridge.app/base-sepolia"
-                    target="_blank"
-                  >
-                    https://superbridge.app/base-sepolia
-                  </a>
-                </p>
-                <input
-                  type="text"
-                  className="w-full p-2 border rounded-md bg-black text-green-400 border-green-500 outline-none focus:ring-0 focus:border-green-400"
-                  placeholder="Enter wallet connect url..."
-                  value={connectInput}
-                  onChange={(e) => setConnectInput(e.target.value)}
-                />
-                <div className="flex justify-center gap-4 mt-4">
-                  <button
-                    className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
-                    onClick={() => setIsModalOpen(false)}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
-                    onClick={handleConnect}
-                  >
-                    Connect
-                  </button>
-                </div>
+      <motion.header
+        className="text-5xl font-bold mt-2 mb-6"
+        animate={{ color: ["#22c55e", "#a855f7", "#22c55e"] }}
+        transition={{
+          duration: 5,
+          repeat: Infinity,
+          repeatType: "reverse",
+        }}
+      >
+        PalWallet
+      </motion.header>
+      <div
+        className="relative w-[360px] h-[360px] bg-cover bg-center"
+        style={{ backgroundImage: "url('/room.png')" }}
+      >
+        {isLoading && (
+          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
+            <div className="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        )}
+        {isSpeaking && (
+          <div className="absolute">
+            <div className="relative w-[340px] ml-2 mt-2">
+              <img src="/bubble.png" alt="Speaking Bubble" className="w-full" />
+              <div className="absolute inset-0 flex flex-col items-start justify-start ml-4 mr-2 my-2 text-black text-sm h-28 overflow-y-scroll">
+                {responseMessage}
               </div>
             </div>
-          )}
-        </>
+          </div>
+        )}
+        {visible && (
+          <motion.img
+            src="/character.png"
+            alt="Character"
+            className="absolute w-40 h-40"
+            initial={{ opacity: 0, y }}
+            animate={{ x: position.x, y: position.y, opacity: 1 }}
+            transition={{ duration: 1, ease: "easeInOut" }}
+          />
+        )}
+        <FaPlugCircleBolt
+          className="absolute bottom-2 left-2 text-gray-600 text-3xl cursor-pointer hover:text-green-500"
+          onClick={() => setIsModalOpen(true)}
+        />
+      </div>
+      <form
+        onSubmit={handleSubmit}
+        className="mt-2 flex flex-col items-center w-full max-w-md z-10 p-4"
+      >
+        <textarea
+          className="w-full h-32 p-2 border rounded-md bg-black text-green-400 border-green-500 shadow-[0px_0px_8px_rgba(0,255,0,0.5)] text-lg leading-tight caret-green-300 outline-none focus:ring-0 focus:border-green-400 disabled:opacity-50 disabled:cursor-not-allowed"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder={
+            isLoading
+              ? "Loading..."
+              : isSpeaking
+              ? "Please check the response..."
+              : "Type a message..."
+          }
+          disabled={isLoading || isSpeaking}
+          style={{
+            backgroundImage:
+              "radial-gradient(rgba(0, 255, 0, 0.2) 8%, transparent 10%)",
+            backgroundSize: "8px 8px",
+            ...(isLoading || isSpeaking
+              ? {
+                  backgroundColor: "rgba(0, 0, 0, 0.6)",
+                  color: "rgba(0, 255, 0, 0.3)",
+                  borderColor: "rgba(0, 255, 0, 0.3)",
+                  boxShadow: "0px 0px 4px rgba(0,255,0,0.2)",
+                }
+              : {}),
+          }}
+        />
+
+        {isConfirming ? (
+          <div className="flex space-x-4">
+            <button
+              className="mt-4 px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+              onClick={async () => {
+                setIsSpeaking(false);
+                setResponseMessage("");
+                setIsConfirming(false);
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={handleTx}
+              className="mt-4 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+            >
+              Confirm
+            </button>
+          </div>
+        ) : isSpeaking ? (
+          <button
+            type="button"
+            onClick={handleAcknowledge}
+            className="mt-4 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+          >
+            I got it
+          </button>
+        ) : (
+          <button
+            type="submit"
+            className="mt-4 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            disabled={!message || isLoading}
+          >
+            {isLoading ? "Loading..." : "Submit"}
+          </button>
+        )}
+      </form>
+      {/* Connection Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+          <div className="bg-gray-800 p-6 rounded-lg shadow-lg text-center w-full max-w-lg m-2">
+            <h2 className="text-xl font-bold mb-2">dApps Fusion</h2>
+            <p className="mb-4 text-xs text-green-400">
+              Tested example dApp:{" "}
+              <a
+                className="underline cursor-pointer"
+                href="https://superbridge.app/base-sepolia"
+                target="_blank"
+              >
+                https://superbridge.app/base-sepolia
+              </a>
+            </p>
+            <input
+              type="text"
+              className="w-full p-2 border rounded-md bg-black text-green-400 border-green-500 outline-none focus:ring-0 focus:border-green-400"
+              placeholder="Enter wallet connect url..."
+              value={connectInput}
+              onChange={(e) => setConnectInput(e.target.value)}
+            />
+            <div className="flex justify-center gap-4 mt-4">
+              <button
+                className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+                onClick={() => setIsModalOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+                onClick={handleConnect}
+              >
+                Connect
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
