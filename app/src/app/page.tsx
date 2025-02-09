@@ -28,7 +28,14 @@ const RoomPage = () => {
   const [proposerUrl, setProposerUrl] = useState("");
   const [proposerIcon, setProposerIcon] = useState("");
   const [topic, setTopic] = useState("");
+  const [id, setId] = useState<any>("");
   const sessionEstablished = useRef(false);
+
+  const [to, setTo] = useState("");
+  const [value, setValue] = useState("");
+  const [data, setData] = useState("");
+
+  const [isConfirming, setIsConfirming] = useState(false);
 
   useEffect(() => {
     const moveCharacter = () => {
@@ -99,7 +106,7 @@ const RoomPage = () => {
     } finally {
       setIsLoading(false);
       setIsSpeaking(true);
-      setPosition({ x: 240, y });
+      setPosition({ x: xFactor, y });
     }
   };
 
@@ -184,6 +191,49 @@ const RoomPage = () => {
         console.log("to", to);
         console.log("value", value);
         console.log("data", data);
+
+        setTopic(topic);
+        setId(id);
+        setTo(to);
+        setValue(value);
+        setData(data);
+
+        setIsLoading(true);
+        setMessage("");
+
+        try {
+          const response = await fetch(
+            process.env.NEXT_PUBLIC_CHAT_API || "http://localhost:8080/chat",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: process.env.NEXT_PUBLIC_BASIC_AUTH
+                  ? "Basic " + btoa(process.env.NEXT_PUBLIC_BASIC_AUTH)
+                  : "",
+              },
+              body: JSON.stringify({
+                message: `my-action-pal-wallet-simulate, to: ${to}, value: ${value}, data: ${data}`,
+              }),
+            }
+          );
+
+          const result = await response.json();
+
+          // Concat all response strings into a single message
+          const concatenatedMessage =
+            result.response?.join(" ") || "No response received.";
+
+          setResponseMessage(concatenatedMessage);
+        } catch (error) {
+          console.error("Error:", error);
+          setResponseMessage("Error: Unable to send the message.");
+        } finally {
+          setIsLoading(false);
+          setIsSpeaking(true);
+          setPosition({ x: xFactor, y });
+          setIsConfirming(true);
+        }
       }
     );
     web3wallet.pair({ uri: connectInput });
@@ -199,6 +249,53 @@ const RoomPage = () => {
       };
     }
   }, [web3wallet, topic]);
+
+  const handleTx = async () => {
+    setIsLoading(true);
+    setMessage("");
+
+    try {
+      const response = await fetch(
+        process.env.NEXT_PUBLIC_CHAT_API || "http://localhost:8080/chat",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: process.env.NEXT_PUBLIC_BASIC_AUTH
+              ? "Basic " + btoa(process.env.NEXT_PUBLIC_BASIC_AUTH)
+              : "",
+          },
+          body: JSON.stringify({
+            message: `my-action-pal-wallet-function, to: ${to}, value: ${value}, data: ${data}`,
+          }),
+        }
+      );
+
+      const result = await response.json();
+
+      // Concat all response strings into a single message
+      const concatenatedMessage =
+        result.response?.join(" ") || "No response received.";
+
+      const [hash] = concatenatedMessage.match(/0x[a-fA-F0-9]{64}/g);
+
+      console.log("hash", hash);
+      setResponseMessage(concatenatedMessage);
+
+      await web3wallet.respondSessionRequest({
+        topic,
+        response: { id, result: hash, jsonrpc: "2.0" },
+      });
+    } catch (error) {
+      console.error("Error:", error);
+      setResponseMessage("Error: Unable to send the message.");
+    } finally {
+      setIsLoading(false);
+      setIsSpeaking(true);
+      setPosition({ x: 240, y });
+      setIsConfirming(false);
+    }
+  };
 
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-black to-gray-800 flex flex-col items-center justify-center text-white overflow-hidden">
@@ -235,9 +332,9 @@ const RoomPage = () => {
         )}
         {isSpeaking && (
           <div className="absolute">
-            <div className="relative w-[360px]">
+            <div className="relative w-[340px] ml-2 mt-2">
               <img src="/bubble.png" alt="Speaking Bubble" className="w-full" />
-              <div className="absolute inset-0 flex flex-col items-start justify-start ml-4 mr-2 my-2 text-black text-sm h-32 overflow-y-scroll">
+              <div className="absolute inset-0 flex flex-col items-start justify-start ml-4 mr-2 my-2 text-black text-sm h-28 overflow-y-scroll">
                 {responseMessage}
               </div>
             </div>
@@ -290,7 +387,27 @@ const RoomPage = () => {
           }}
         />
 
-        {isSpeaking ? (
+        {isConfirming ? (
+          <div className="flex space-x-4">
+            <button
+              className="mt-4 px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+              onClick={async () => {
+                setIsSpeaking(false);
+                setResponseMessage("");
+                setIsConfirming(false);
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={handleTx}
+              className="mt-4 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+            >
+              Confirm
+            </button>
+          </div>
+        ) : isSpeaking ? (
           <button
             type="button"
             onClick={handleAcknowledge}
@@ -312,7 +429,17 @@ const RoomPage = () => {
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
           <div className="bg-gray-800 p-6 rounded-lg shadow-lg text-center w-full max-w-lg m-2">
-            <h2 className="text-xl font-bold mb-4">dApps Fusion</h2>
+            <h2 className="text-xl font-bold mb-2">dApps Fusion</h2>
+            <p className="mb-4 text-xs text-green-400">
+              Tested example dApp:{" "}
+              <a
+                className="underline cursor-pointer"
+                href="https://superbridge.app/base-sepolia"
+                target="_blank"
+              >
+                https://superbridge.app/base-sepolia
+              </a>
+            </p>
             <input
               type="text"
               className="w-full p-2 border rounded-md bg-black text-green-400 border-green-500 outline-none focus:ring-0 focus:border-green-400"

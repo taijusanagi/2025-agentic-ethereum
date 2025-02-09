@@ -19,7 +19,7 @@ import { ChatOpenAI } from "@langchain/openai";
 import * as dotenv from "dotenv";
 import * as fs from "fs";
 import {
-  myActionPalWalletCustomFunction,
+  myActionPalWalletRunDirect,
   myActionPalWalletSimlate,
 } from "./customAction";
 
@@ -69,7 +69,7 @@ async function initializeAgent() {
       walletProvider,
       actionProviders: [
         myActionPalWalletSimlate,
-        myActionPalWalletCustomFunction,
+        myActionPalWalletRunDirect,
         wethActionProvider(),
         pythActionProvider(),
         erc20ActionProvider(),

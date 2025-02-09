@@ -2,18 +2,18 @@ import { customActionProvider, EvmWalletProvider } from "@coinbase/agentkit";
 
 import { z } from "zod";
 
-export const myActionPalWalletCustomFunction =
+export const myActionPalWalletRunDirect =
   customActionProvider<EvmWalletProvider>({
-    name: "my-action-pal-wallet-custom-function",
+    name: "my-action-pal-wallet-run-direct",
     description:
-      "If user send message with my-action-pal-wallet-custom-function, this method is called",
+      "If user send message with my-action-pal-wallet-run-direct, this method is called",
     schema: z.object({
       to: z.string().describe("to address"),
       value: z.string().describe("value"),
       data: z.string().describe("data"),
     }),
     invoke: async (walletProvider, args: any) => {
-      console.log("my-action-pal-wallet-custom-function");
+      console.log("my-action-pal-wallet-run-direct");
       const { to, value, data } = args;
 
       console.log("to", to);
