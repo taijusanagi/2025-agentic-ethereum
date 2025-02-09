@@ -28,7 +28,7 @@ PalWallet is an AI-powered crypto agent that combines intelligent automation wit
 
 ### Live App
 
-TBD
+[https://2025-agents-palwallet.vercel.app/](https://2025-agents-palwallet.vercel.app/)
 
 ### Deployed AI Agent
 
@@ -36,7 +36,7 @@ https://autonome.alt.technology/test-naigyf (Password is needed to access, pleas
 
 ### Local Development
 
-For dApps Fusion, it is required to run chatbot locally, please run the following after set the env
+For dApps Fusion, it is required to run chatbot locally, please run the following after set the [env](https://github.com/taijusanagi/2025-agents-palwallet/blob/main/chatbot/.env.sample)
 
 ```
 cd chatbot
